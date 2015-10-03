@@ -53,12 +53,15 @@ public:
 
 };
 
-string uiCourseNum(); 
 string convert2UpperCase(string stringInput);
+string course2Manage();
 
+int countArrayEntries(string targetArray[]);
 
 int main()
 {
+	string listOfCourses[] = { "CS361", "CS362", "MT415", "111", "456"};
+
 	course course1("CS361", "Control Structures", DEFAULT_CAPACITY);
 
 
@@ -67,9 +70,9 @@ int main()
 	
 	course course3;
 
-	course3.printCourse();
+	//course3.printCourse();
 
-	uiCourseNum();
+	countArrayEntries(listOfCourses);
 
 
 	system("PAUSE");
@@ -104,34 +107,41 @@ void course::printCourse()
 
 }
 
-string uiCourseNum()
+
+string  course2Manage()
 {
 	int length;
 	int errorCounter;
-	string courseNumEntered; 
-
-	
+	string courseNumEntered;
 	
 	do
 	{
 		errorCounter = 0;
 
-		cout << "Please enter a course number: ";
-		cin >> courseNumEntered;
+		cout << "Choose a course to manage :" << endl;
+		cout << "CS361 – Control Structures" << endl;
+		cout << "CS362 – Data Structures" << endl;
+		cout << "MT415 – Linear Algebra" << endl;
+		cout << "Enter the course number(e.g.CS200) or E to exit : ";
 
+		cin >> courseNumEntered;
 		courseNumEntered = convert2UpperCase(courseNumEntered);
+
+
 		length = courseNumEntered.length();
 
 		if (length < 5)
 		{
-			cout << "ERROR! Input " << courseNumEntered << " is not long enough. System Expected 5 characters." << endl << endl;
+			cout << "ERROR! The course number you entered  " << courseNumEntered << " is too short." << endl;
+			cout << "System Expected 5 characters." << endl << endl;
 			errorCounter++;
 
 		}
 
 		else if (length > 5)
 		{
-			cout << "ERROR! Input " << courseNumEntered << " is too long. System Expected 5 characters." << endl << endl;
+			cout << "ERROR! The course number you entered  " << courseNumEntered << " is too long. "<< endl;
+			cout <<  "System Expected 5 characters." << endl << endl;
 			errorCounter++;
 
 		}
@@ -173,6 +183,9 @@ string uiCourseNum()
 
 	while (errorCounter > 0);
 
+	
+	
+	
 	return courseNumEntered;
 
 
@@ -206,4 +219,46 @@ string convert2UpperCase(string stringInput)
 
 	return upperCasedString;
 
+}
+
+void  Search4Course(string target, string courseNumList[])
+{
+	
+	int placeFound = 0;
+	string validCourseNumber;
+
+	int numOfEntries = countArrayEntries(courseNumList);
+
+
+	while ((placeFound < numOfEntries) && (courseNumList[placeFound] != target))
+			placeFound++;
+
+	//If itemToDel was Found, delete it
+	if (placeFound < numOfEntries)
+	{
+
+	}
+
+
+
+
+	
+}
+
+int countArrayEntries(string targetArray[])
+{
+
+	int count = 0;
+
+	for (int index = 0; targetArray[index] != ""; index++)
+		if (targetArray[index] != "")
+		{
+			count++;
+		}
+
+	count--; 
+
+	//cout << count << endl; 
+
+	return count; 
 }
