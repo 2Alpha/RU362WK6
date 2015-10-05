@@ -54,9 +54,10 @@ public:
 };
 
 string convert2UpperCase(string stringInput);
-string course2Manage();
+string course2Manage(string existingCourses[]);
 
 int countArrayEntries(string targetArray[]);
+bool Search4Course(string target, string courseNumList[]);
 
 int main()
 {
@@ -72,7 +73,9 @@ int main()
 
 	//course3.printCourse();
 
-	countArrayEntries(listOfCourses);
+	cout << "# " << countArrayEntries(listOfCourses) << endl; ;
+
+	//course2Manage(listOfCourses);
 
 
 	system("PAUSE");
@@ -108,81 +111,88 @@ void course::printCourse()
 }
 
 
-string  course2Manage()
+string  course2Manage(string existingCourses[])
 {
 	int length;
-	int errorCounter;
+	int formatErrorCounter;
 	string courseNumEntered;
+	bool courseExist = false; 
 	
 	do
 	{
-		errorCounter = 0;
-
-		cout << "Choose a course to manage :" << endl;
-		cout << "CS361 – Control Structures" << endl;
-		cout << "CS362 – Data Structures" << endl;
-		cout << "MT415 – Linear Algebra" << endl;
-		cout << "Enter the course number(e.g.CS200) or E to exit : ";
-
-		cin >> courseNumEntered;
-		courseNumEntered = convert2UpperCase(courseNumEntered);
-
-
-		length = courseNumEntered.length();
-
-		if (length < 5)
+		do
 		{
-			cout << "ERROR! The course number you entered  " << courseNumEntered << " is too short." << endl;
-			cout << "System Expected 5 characters." << endl << endl;
-			errorCounter++;
+			formatErrorCounter = 0;
 
-		}
+			cout << "Choose a course to manage :" << endl;
+			cout << "CS361 – Control Structures" << endl;
+			cout << "CS362 – Data Structures" << endl;
+			cout << "MT415 – Linear Algebra" << endl;
+			cout << "Enter the course number(e.g.CS200) or E to exit : ";
 
-		else if (length > 5)
-		{
-			cout << "ERROR! The course number you entered  " << courseNumEntered << " is too long. "<< endl;
-			cout <<  "System Expected 5 characters." << endl << endl;
-			errorCounter++;
-
-		}
-
-		else if (length == 5)
-		{
-			for (int index = 0; index < 2; index++)         // Used Loops for error checking 
-			{
-				if (!(isalpha(courseNumEntered[index])))
-				{
-					errorCounter++;
-					//cout << "not a X " << endl;
-				}
-			}
-
-			for (int index = 2; index < 5; index++)         // Used Loops for error checking 
-			{
-				if (!(isdigit(courseNumEntered[index])))
-				{
-					errorCounter++;
-					//cout << "not a # " << endl;
-				}
-			}
-
-		}
+			cin >> courseNumEntered;
+			courseNumEntered = convert2UpperCase(courseNumEntered);
 
 
-		if ((length == 5) && (errorCounter > 0))
-		{
+			length = courseNumEntered.length();
+
+			if (length < 5)
 			{
 				cout << endl;
-				cout << "Error! You Enterd 5 characters, however not in the correct format." << endl;
-				cout << "Please follow the format \"XX###\" Try again." << endl;
+				cout << "ERROR! The course number you entered  " << courseNumEntered << " is too short." << endl;
+				cout << "System Expected 5 characters." << endl << endl;
+				formatErrorCounter++;
+
 			}
+
+			else if (length > 5)
+			{
+				cout << endl;
+				cout << "ERROR! The course number you entered  " << courseNumEntered << " is too long. " << endl;
+				cout << "System Expected 5 characters." << endl << endl;
+				formatErrorCounter++;
+			}
+
+			else if (length == 5)
+			{
+				for (int index = 0; index < 2; index++)         // Used Loops for error checking 
+				{
+					if (!(isalpha(courseNumEntered[index])))
+					{
+						formatErrorCounter++;
+						//cout << "not a X " << endl;
+					}
+				}
+
+				for (int index = 2; index < 5; index++)         // Used Loops for error checking 
+				{
+					if (!(isdigit(courseNumEntered[index])))
+					{
+						formatErrorCounter++;
+						//cout << "not a # " << endl;
+					}
+				}
+
+			}
+
+
+			if ((length == 5) && (formatErrorCounter > 0))
+			{
+				{
+					cout << endl;
+					cout << "Error! You Enterd 5 characters, however not in the correct format." << endl;
+					cout << "Please follow the format \"XX###\" Try again." << endl << endl;
+				}
+			}
+
+
 		}
 
-	}
+		while (formatErrorCounter > 0);
 
+		courseExist = Search4Course(courseNumEntered, existingCourses);
 
-	while (errorCounter > 0);
-
+	} while (courseExist != true);
 	
 	
 	
@@ -221,28 +231,36 @@ string convert2UpperCase(string stringInput)
 
 }
 
-void  Search4Course(string target, string courseNumList[])
+bool Search4Course(string target, string courseNumList[])
 {
 	
 	int placeFound = 0;
-	string validCourseNumber;
-
 	int numOfEntries = countArrayEntries(courseNumList);
+	bool courseFound;
+
+	cout << "num of entries = " << numOfEntries << endl; 
+	cout << "in search section" << endl; 
+		
+		while ((placeFound < numOfEntries) && (courseNumList[placeFound] != target))
+		{
+			placeFound++;		
+			cout << "looking" << endl;
+		}
 
 
-	while ((placeFound < numOfEntries) && (courseNumList[placeFound] != target))
-			placeFound++;
+		if (placeFound < numOfEntries)
+		{
+			courseFound = true;
+			cout << "found it!" << endl;
+		}
 
-	//If itemToDel was Found, delete it
-	if (placeFound < numOfEntries)
-	{
+		else
+		{
+			courseFound = false;
+			cout << "srry maybe next semester" << endl;
+		}
 
-	}
-
-
-
-
-	
+		return courseFound;
 }
 
 int countArrayEntries(string targetArray[])
@@ -253,6 +271,7 @@ int countArrayEntries(string targetArray[])
 	for (int index = 0; targetArray[index] != ""; index++)
 		if (targetArray[index] != "")
 		{
+			cout << "ding" << endl;
 			count++;
 		}
 
