@@ -64,11 +64,12 @@ string course2Manage(string existingCourses[]);
 int countArrayEntries(string targetArray[]);
 bool Search4Course(string target, string courseNumList[]);
 
-void CourseManagementMenu();
+void CourseManagementMenu(string mainMenuResponse);
 
 int main()
 {
-	string listOfCourses[] = { "CS361", "CS362", "MT415"};
+	string listOfCourses[] = { "CS361", "CS362", "MT415", "E"};
+	string mainMenuResponse;
 
 	course course1("CS361", "Control Structures", DEFAULT_CAPACITY);
 
@@ -78,14 +79,23 @@ int main()
 	
 	course course3;
 
+	do
+	{
+		mainMenuResponse = course2Manage(listOfCourses);
+
+		CourseManagementMenu(mainMenuResponse);
+
+
+	} while (mainMenuResponse != "E");
+
+
+	//CourseManagementMenu();
+
+	// cout << course2; // over load ready 
+
 	//course3.printCourse();
 
 	//cout << "# " << countArrayEntries(listOfCourses) << endl; ;
-
-	//course2Manage(listOfCourses);
-
-	CourseManagementMenu(); 
-
 
 	system("PAUSE");
 	return 0;
@@ -107,6 +117,8 @@ course::course(string cNumber, string cTitle, int cCap)
 	courseNumber = cNumber;
 
 	courseTitle = cTitle;
+
+	enrolledStudents = 0;
 
 	capacity = cCap; 
 
@@ -142,63 +154,64 @@ string  course2Manage(string existingCourses[])
 			cin >> courseNumEntered;
 			courseNumEntered = convert2UpperCase(courseNumEntered);
 
-
-			length = courseNumEntered.length();
-
-			if (length < 5)
+			if (courseNumEntered != "E")
 			{
-				cout << endl;
-				cout << "ERROR! The course number you entered  " << courseNumEntered << " is too short." << endl;
-				cout << "System Expected 5 characters." << endl << endl;
-				formatErrorCounter++;
 
-			}
+				length = courseNumEntered.length();
 
-			else if (length > 5)
-			{
-				cout << endl;
-				cout << "ERROR! The course number you entered  " << courseNumEntered << " is too long. " << endl;
-				cout << "System Expected 5 characters." << endl << endl;
-				formatErrorCounter++;
-			}
-
-			else if (length == 5)
-			{
-				for (int index = 0; index < 2; index++)         // Used Loops for error checking 
-				{
-					if (!(isalpha(courseNumEntered[index])))
-					{
-						formatErrorCounter++;
-						//cout << "not a X " << endl;
-					}
-				}
-
-				for (int index = 2; index < 5; index++)         // Used Loops for error checking 
-				{
-					if (!(isdigit(courseNumEntered[index])))
-					{
-						formatErrorCounter++;
-						//cout << "not a # " << endl;
-					}
-				}
-
-			}
-
-
-			if ((length == 5) && (formatErrorCounter > 0))
-			{
+				if (length < 5)
 				{
 					cout << endl;
-					cout << "Error! You Enterd 5 characters, however not in the correct format." << endl;
-					cout << "Please follow the format \"XX###\" Try again." << endl << endl;
+					cout << "ERROR! The course number you entered  " << courseNumEntered << " is too short." << endl;
+					cout << "System Expected 5 characters." << endl << endl;
+					formatErrorCounter++;
+
+				}
+
+				else if (length > 5)
+				{
+					cout << endl;
+					cout << "ERROR! The course number you entered  " << courseNumEntered << " is too long. " << endl;
+					cout << "System Expected 5 characters." << endl << endl;
+					formatErrorCounter++;
+				}
+
+				else if (length == 5)
+				{
+					for (int index = 0; index < 2; index++)         // Used Loops for error checking 
+					{
+						if (!(isalpha(courseNumEntered[index])))
+						{
+							formatErrorCounter++;
+							//cout << "not a X " << endl;
+						}
+					}
+
+					for (int index = 2; index < 5; index++)         // Used Loops for error checking 
+					{
+						if (!(isdigit(courseNumEntered[index])))
+						{
+							formatErrorCounter++;
+							//cout << "not a # " << endl;
+						}
+					}
+
+				}
+
+
+				if ((length == 5) && (formatErrorCounter > 0))
+				{
+					{
+						cout << endl;
+						cout << "Error! You Enterd 5 characters, however not in the correct format." << endl;
+						cout << "Please follow the format \"XX###\" Try again." << endl << endl;
+					}
 				}
 			}
 
+		} while (formatErrorCounter > 0);
 
-		}
-
-		while (formatErrorCounter > 0);
-
+		
 		courseExist = Search4Course(courseNumEntered, existingCourses);
 
 	} while (courseExist != true);
@@ -259,7 +272,7 @@ bool Search4Course(string target, string courseNumList[])
 		{
 			courseFound = true;
 			cout << endl;
-			cout << "Success! Course " << target << " was found" << endl << endl;
+			cout << "Success! Input of " << target << " was accepted" << endl << endl;
 		}
 
 		else
@@ -273,46 +286,58 @@ bool Search4Course(string target, string courseNumList[])
 		return courseFound;
 }
 
-void CourseManagementMenu()
+void CourseManagementMenu(string mainMenuResponse)
 {
-	string level1Response;
-	bool repeatQuestion;
-
-	do
+	if (mainMenuResponse != "E")
 	{
 
-		cout << "P - Print course data" << endl;
-		cout << "N - Modify course Number" << endl;
-		cout << "T - Modify course Title" << endl;
-		cout << "C - Modify course Capacity" << endl;
-		cout << "I - Increment course Capacity" << endl;
-		cout << "S - Student Management" << endl;
-		cout << "Enter response here: "; 
+		string level1Response;
+		bool repeatQuestion;
 
-		cin >> level1Response;
-		cin.ignore(IGNORE_AMOUNT, '\n');
-
-		level1Response = convert2UpperCase(level1Response);
-
-
-		if ((level1Response != "P") && (level1Response != "N") && (level1Response != "T") &&
-			(level1Response != "C") && (level1Response != "I") && (level1Response != "S"))
+		do
 		{
-			cout << endl;
-			cout << "ERROR! Unrecognized input, please try again." << endl;
-			cout << endl;
-			repeatQuestion = true;
+
+			cout << "P - Print course data" << endl;
+			cout << "N - Modify course Number" << endl;
+			cout << "T - Modify course Title" << endl;
+			cout << "C - Modify course Capacity" << endl;
+			cout << "I - Increment course Capacity" << endl;
+			cout << "S - Student Management" << endl;
+			cout << "Enter response here: ";
+
+			cin >> level1Response;
+			cin.ignore(IGNORE_AMOUNT, '\n');
+
+			level1Response = convert2UpperCase(level1Response);
+
+
+			if ((level1Response != "P") && (level1Response != "N") && (level1Response != "T") &&
+				(level1Response != "C") && (level1Response != "I") && (level1Response != "S"))
+			{
+				cout << endl;
+				cout << "ERROR! Unrecognized input, please try again." << endl;
+				cout << endl;
+				repeatQuestion = true;
+
+			}
+
+			else
+			{
+				repeatQuestion = false;
+			}
 
 		}
+		// while repeat question equals true
+		while (repeatQuestion == true);
 
-		else
+
+		if (level1Response == "P")
 		{
-			repeatQuestion = false;
+			 cout << course2; 
+
 		}
 
 	}
-	// while repeat question equals true
-	while (repeatQuestion == true);
 }
 
 int countArrayEntries(string targetArray[])
@@ -336,7 +361,11 @@ int countArrayEntries(string targetArray[])
 
 ostream& operator<< (ostream& outStream, const course& data)
 {
-	outStream << data.courseNumber;
+	outStream << data.courseNumber << " - " << data.courseTitle << ":" << endl;
+	outStream << data.enrolledStudents << " Seats taken, out of " << data.capacity << " total seats." << endl; 
+
+	
+		
 	// https://www.youtube.com/watch?v=WtoHf6gPnCs
 	//outStream << 
 
