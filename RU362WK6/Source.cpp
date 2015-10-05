@@ -52,7 +52,11 @@ public:
 		void addOneStudent(); 
 		void dropOneStudent(); 
 
+		friend ostream& operator<< (ostream& outStream, const course& data);
+
 };
+
+
 
 string convert2UpperCase(string stringInput);
 string course2Manage(string existingCourses[]);
@@ -328,4 +332,13 @@ int countArrayEntries(string targetArray[])
 	//cout << count << endl; 
 
 	return count; 
+}
+
+ostream& operator<< (ostream& outStream, const course& data)
+{
+	outStream << data.courseNumber;
+	// https://www.youtube.com/watch?v=WtoHf6gPnCs
+	//outStream << 
+
+	return outStream;
 }
