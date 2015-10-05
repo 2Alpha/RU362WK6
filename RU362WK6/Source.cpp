@@ -19,6 +19,7 @@ using namespace std;
 const int MIN_CAPACITY = 1;
 const int MAX_CAPACITY = 30;
 const int DEFAULT_CAPACITY = 30;
+const int IGNORE_AMOUNT = 100;
 
 
 
@@ -59,9 +60,11 @@ string course2Manage(string existingCourses[]);
 int countArrayEntries(string targetArray[]);
 bool Search4Course(string target, string courseNumList[]);
 
+void CourseManagementMenu();
+
 int main()
 {
-	string listOfCourses[] = { "CS361", "CS362", "MT415", "111", "456"};
+	string listOfCourses[] = { "CS361", "CS362", "MT415"};
 
 	course course1("CS361", "Control Structures", DEFAULT_CAPACITY);
 
@@ -73,9 +76,11 @@ int main()
 
 	//course3.printCourse();
 
-	cout << "# " << countArrayEntries(listOfCourses) << endl; ;
+	//cout << "# " << countArrayEntries(listOfCourses) << endl; ;
 
 	//course2Manage(listOfCourses);
+
+	CourseManagementMenu(); 
 
 
 	system("PAUSE");
@@ -125,9 +130,9 @@ string  course2Manage(string existingCourses[])
 			formatErrorCounter = 0;
 
 			cout << "Choose a course to manage :" << endl;
-			cout << "CS361 – Control Structures" << endl;
-			cout << "CS362 – Data Structures" << endl;
-			cout << "MT415 – Linear Algebra" << endl;
+			cout << "CS361 - Control Structures" << endl;
+			cout << "CS362 - Data Structures" << endl;
+			cout << "MT415 - Linear Algebra" << endl;
 			cout << "Enter the course number(e.g.CS200) or E to exit : ";
 
 			cin >> courseNumEntered;
@@ -238,29 +243,72 @@ bool Search4Course(string target, string courseNumList[])
 	int numOfEntries = countArrayEntries(courseNumList);
 	bool courseFound;
 
-	cout << "num of entries = " << numOfEntries << endl; 
-	cout << "in search section" << endl; 
 		
 		while ((placeFound < numOfEntries) && (courseNumList[placeFound] != target))
 		{
 			placeFound++;		
-			cout << "looking" << endl;
+			//cout << "looking" << endl;
 		}
 
 
 		if (placeFound < numOfEntries)
 		{
 			courseFound = true;
-			cout << "found it!" << endl;
+			cout << endl;
+			cout << "Success! Course " << target << " was found" << endl << endl;
 		}
 
 		else
 		{
 			courseFound = false;
-			cout << "srry maybe next semester" << endl;
+			cout << endl; 
+			cout << "ERROR! Course number " << target << " was not found." << endl; 
+			cout << "Maybe next semester" << endl << endl;
 		}
 
 		return courseFound;
+}
+
+void CourseManagementMenu()
+{
+	string level1Response;
+	bool repeatQuestion;
+
+	do
+	{
+
+		cout << "P - Print course data" << endl;
+		cout << "N - Modify course Number" << endl;
+		cout << "T - Modify course Title" << endl;
+		cout << "C - Modify course Capacity" << endl;
+		cout << "I - Increment course Capacity" << endl;
+		cout << "S - Student Management" << endl;
+		cout << "Enter response here: "; 
+
+		cin >> level1Response;
+		cin.ignore(IGNORE_AMOUNT, '\n');
+
+		level1Response = convert2UpperCase(level1Response);
+
+
+		if ((level1Response != "P") && (level1Response != "N") && (level1Response != "T") &&
+			(level1Response != "C") && (level1Response != "I") && (level1Response != "S"))
+		{
+			cout << endl;
+			cout << "ERROR! Unrecognized input, please try again." << endl;
+			cout << endl;
+			repeatQuestion = true;
+
+		}
+
+		else
+		{
+			repeatQuestion = false;
+		}
+
+	}
+	// while repeat question equals true
+	while (repeatQuestion == true);
 }
 
 int countArrayEntries(string targetArray[])
@@ -271,7 +319,7 @@ int countArrayEntries(string targetArray[])
 	for (int index = 0; targetArray[index] != ""; index++)
 		if (targetArray[index] != "")
 		{
-			cout << "ding" << endl;
+			
 			count++;
 		}
 
