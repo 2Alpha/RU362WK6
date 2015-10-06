@@ -21,7 +21,12 @@ const int MAX_CAPACITY = 30;
 const int DEFAULT_CAPACITY = 30;
 const int IGNORE_AMOUNT = 100;
 
+struct crossReference
+{
+	string objectName;
+	string ClassNumber;
 
+};
 
 class course
 {
@@ -64,10 +69,19 @@ string course2Manage(string existingCourses[]);
 int countArrayEntries(string targetArray[]);
 bool Search4Course(string target, string courseNumList[]);
 
-void CourseManagementMenu(string mainMenuResponse);
+void CourseManagementMenu(string mainMenuResponse, crossReference courseData[], course c1, course c2, course c3);
 
 int main()
 {
+	crossReference courseProperties[3];
+
+	courseProperties [0].objectName = "course1";
+	courseProperties [0].ClassNumber = "CS361";
+
+	courseProperties [1].objectName = "course2";
+	courseProperties [1].ClassNumber = "CS362";
+
+	
 	string listOfCourses[] = { "CS361", "CS362", "MT415", "E"};
 	string mainMenuResponse;
 
@@ -83,7 +97,7 @@ int main()
 	{
 		mainMenuResponse = course2Manage(listOfCourses);
 
-		CourseManagementMenu(mainMenuResponse);
+		CourseManagementMenu(mainMenuResponse, courseProperties, course1, course2, course3);
 
 
 	} while (mainMenuResponse != "E");
@@ -286,10 +300,19 @@ bool Search4Course(string target, string courseNumList[])
 		return courseFound;
 }
 
-void CourseManagementMenu(string mainMenuResponse)
+void CourseManagementMenu(string mainMenuResponse, crossReference courseData[], course c1, course c2, course c3)
 {
 	if (mainMenuResponse != "E")
 	{
+
+		int placeFound = 0;
+		while ((placeFound < 2) && (courseData[placeFound].ClassNumber != mainMenuResponse))
+		{
+			placeFound++;
+			//cout << "looking" << endl;
+		}
+
+
 
 		string level1Response;
 		bool repeatQuestion;
@@ -333,7 +356,21 @@ void CourseManagementMenu(string mainMenuResponse)
 
 		if (level1Response == "P")
 		{
-			 cout << course2; 
+			
+			if (placeFound == 0)
+			{
+				cout << c1;
+			}
+				
+			if (placeFound == 1)
+			{
+				cout << c2;
+			}
+
+			if (placeFound == 2)
+			{
+				cout << c3;
+			}
 
 		}
 
@@ -361,9 +398,10 @@ int countArrayEntries(string targetArray[])
 
 ostream& operator<< (ostream& outStream, const course& data)
 {
+	cout << endl; 
 	outStream << data.courseNumber << " - " << data.courseTitle << ":" << endl;
 	outStream << data.enrolledStudents << " Seats taken, out of " << data.capacity << " total seats." << endl; 
-
+	cout << endl; 
 	
 		
 	// https://www.youtube.com/watch?v=WtoHf6gPnCs
