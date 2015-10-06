@@ -71,6 +71,8 @@ bool Search4Course(string target, string courseNumList[]);
 
 void CourseManagementMenu(string mainMenuResponse, crossReference courseData[], course c1, course c2, course c3);
 
+int courseNumFormatCheck(string courseNumEntered); 
+
 int main()
 {
 	crossReference courseProperties[3];
@@ -157,8 +159,6 @@ string  course2Manage(string existingCourses[])
 	{
 		do
 		{
-			formatErrorCounter = 0;
-
 			cout << "Choose a course to manage :" << endl;
 			cout << "CS361 - Control Structures" << endl;
 			cout << "CS362 - Data Structures" << endl;
@@ -168,64 +168,9 @@ string  course2Manage(string existingCourses[])
 			cin >> courseNumEntered;
 			courseNumEntered = convert2UpperCase(courseNumEntered);
 
-			if (courseNumEntered != "E")
-			{
-
-				length = courseNumEntered.length();
-
-				if (length < 5)
-				{
-					cout << endl;
-					cout << "ERROR! The course number you entered  " << courseNumEntered << " is too short." << endl;
-					cout << "System Expected 5 characters." << endl << endl;
-					formatErrorCounter++;
-
-				}
-
-				else if (length > 5)
-				{
-					cout << endl;
-					cout << "ERROR! The course number you entered  " << courseNumEntered << " is too long. " << endl;
-					cout << "System Expected 5 characters." << endl << endl;
-					formatErrorCounter++;
-				}
-
-				else if (length == 5)
-				{
-					for (int index = 0; index < 2; index++)         // Used Loops for error checking 
-					{
-						if (!(isalpha(courseNumEntered[index])))
-						{
-							formatErrorCounter++;
-							//cout << "not a X " << endl;
-						}
-					}
-
-					for (int index = 2; index < 5; index++)         // Used Loops for error checking 
-					{
-						if (!(isdigit(courseNumEntered[index])))
-						{
-							formatErrorCounter++;
-							//cout << "not a # " << endl;
-						}
-					}
-
-				}
+		} while (courseNumFormatCheck(courseNumEntered) > 0);
 
 
-				if ((length == 5) && (formatErrorCounter > 0))
-				{
-					{
-						cout << endl;
-						cout << "Error! You Enterd 5 characters, however not in the correct format." << endl;
-						cout << "Please follow the format \"XX###\" Try again." << endl << endl;
-					}
-				}
-			}
-
-		} while (formatErrorCounter > 0);
-
-		
 		courseExist = Search4Course(courseNumEntered, existingCourses);
 
 	} while (courseExist != true);
@@ -374,6 +319,26 @@ void CourseManagementMenu(string mainMenuResponse, crossReference courseData[], 
 
 		}
 
+		if (level1Response == "N")
+		{
+			
+			if (placeFound == 0)
+			{
+				 c1.setCourseNum();
+			}
+
+			if (placeFound == 1)
+			{
+				c1.setCourseNum();
+			}
+
+			if (placeFound == 2)
+			{
+				c1.setCourseNum();
+			}
+
+		}
+
 	}
 }
 
@@ -383,15 +348,13 @@ int countArrayEntries(string targetArray[])
 	int count = 0;
 
 	for (int index = 0; targetArray[index] != ""; index++)
-		if (targetArray[index] != "")
+		if (targetArray[index].length() == 5)
 		{
 			
 			count++;
+			//cout << count << endl; 
 		}
 
-	count--; 
-
-	//cout << count << endl; 
 
 	return count; 
 }
@@ -408,4 +371,84 @@ ostream& operator<< (ostream& outStream, const course& data)
 	//outStream << 
 
 	return outStream;
+}
+
+int courseNumFormatCheck(string courseNumEntered)
+{
+	int length;
+	int formatErrorCounter = 0;
+	string correctlyFormatedCourse; 
+
+
+		length = courseNumEntered.length();
+
+		if (length < 5)
+		{
+			cout << endl;
+			cout << "ERROR! The course number you entered  " << courseNumEntered << " is too short." << endl;
+			cout << "System Expected 5 characters." << endl << endl;
+			formatErrorCounter++;
+
+		}
+
+		else if (length > 5)
+		{
+			cout << endl;
+			cout << "ERROR! The course number you entered  " << courseNumEntered << " is too long. " << endl;
+			cout << "System Expected 5 characters." << endl << endl;
+			formatErrorCounter++;
+		}
+
+		else if (length == 5)
+		{
+			for (int index = 0; index < 2; index++)         // Used Loops for error checking 
+			{
+				if (!(isalpha(courseNumEntered[index])))
+				{
+					formatErrorCounter++;
+					//cout << "not a X " << endl;
+				}
+			}
+
+			for (int index = 2; index < 5; index++)         // Used Loops for error checking 
+			{
+				if (!(isdigit(courseNumEntered[index])))
+				{
+					formatErrorCounter++;
+					//cout << "not a # " << endl;
+				}
+			}
+
+		}
+
+
+		if ((length == 5) && (formatErrorCounter > 0))
+		{
+			{
+				cout << endl;
+				cout << "Error! You Enterd 5 characters, however not in the correct format." << endl;
+				cout << "Please follow the format \"XX###\" Try again." << endl << endl;
+			}
+		}
+
+
+	return formatErrorCounter;
+
+}
+
+void course::setCourseNum()
+{
+	string desiredCourseNum;
+
+		do
+		{
+			cout << "Enter the desired Course NUmber : " << endl; 
+			cout << "Remember format must be XX###" << endl; 
+
+			cin >> desiredCourseNum;
+			desiredCourseNum = convert2UpperCase(desiredCourseNum);
+
+		} while (courseNumFormatCheck(desiredCourseNum) > 0);
+
+
 }
