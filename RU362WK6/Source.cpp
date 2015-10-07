@@ -37,7 +37,10 @@ private:
 		int enrolledStudents;
 		string StudentIDList[MAX_CAPACITY];
 		
-		string listOfCourses[] = { "CS361", "CS362", "MT415", "E" };
+		static string listOfCourses[]; 
+
+		//string course::listOfCourses[] = { "CS361", "CS362", "MT415", "E" };
+		
 
 public:
 	course();
@@ -53,6 +56,8 @@ public:
 		void getNumEnrolled();
 
 		void printCourse(); 
+		void printCourseNumber();
+		void printCourseTitle();
 		void printStudentIDs(); 
 
 		void addOneStudent(); 
@@ -62,10 +67,10 @@ public:
 
 };
 
-
+string course::listOfCourses[] = { "CS361", "CS362", "MT415", "E" };
 
 string convert2UpperCase(string stringInput);
-string course2Manage(string existingCourses[]);
+string course2Manage(course c1, course c2, course c3);
 
 int countArrayEntries(string targetArray[]);
 bool Search4Course(string target, string courseNumList[]);
@@ -85,7 +90,7 @@ int main()
 	courseProperties [1].ClassNumber = "CS362";
 
 	
-	string listOfCourses[] = { "CS361", "CS362", "MT415", "E"};
+	//string listOfCourses[] = { "CS361", "CS362", "MT415", "E"};
 	string mainMenuResponse;
 
 	course course1("CS361", "Control Structures", DEFAULT_CAPACITY);
@@ -98,7 +103,7 @@ int main()
 
 	do
 	{
-		mainMenuResponse = course2Manage(listOfCourses);
+		mainMenuResponse = course2Manage(course1, course2, course3);
 
 		CourseManagementMenu(mainMenuResponse, courseProperties, course1, course2, course3);
 
@@ -120,6 +125,7 @@ int main()
 }
 
 
+
 course::course()
 {
 	courseNumber = "";
@@ -127,6 +133,7 @@ course::course()
 	capacity = MIN_CAPACITY;
 	enrolledStudents = 0;
 
+	
 }
 
 course::course(string cNumber, string cTitle, int cCap)
@@ -147,9 +154,20 @@ void course::printCourse()
 	cout << courseNumber << endl; 
 
 }
+void course::printCourseNumber()
+{
+	cout << courseNumber; 
+
+}
 
 
-string  course2Manage(string existingCourses[])
+void course::printCourseTitle()
+{//
+	cout << courseTitle;
+
+}
+
+string  course2Manage(course c1, course c2, course c3)
 {
 	int length;
 	int formatErrorCounter;
@@ -161,8 +179,8 @@ string  course2Manage(string existingCourses[])
 		do
 		{
 			cout << "Choose a course to manage :" << endl;
-			cout << "CS361 - Control Structures" << endl;
-			cout << "CS362 - Data Structures" << endl;
+			c1.printCourseNumber();  cout << " - "; c1.printCourseTitle(); cout << endl; 
+			c2.printCourseNumber();  cout << " - "; c2.printCourseTitle(); cout << endl;
 			cout << "MT415 - Linear Algebra" << endl;
 			cout << "Enter the course number(e.g.CS200) or E to exit : ";
 
@@ -172,7 +190,7 @@ string  course2Manage(string existingCourses[])
 		} while (courseNumFormatCheck(courseNumEntered) > 0);
 
 
-		courseExist = Search4Course(courseNumEntered, existingCourses);
+		//courseExist = Search4Course(courseNumEntered, existingCourses);
 
 	} while (courseExist != true);
 	
