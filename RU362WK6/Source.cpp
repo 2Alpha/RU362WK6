@@ -458,6 +458,6 @@ void course::setCourseNum()
 	
 	courseNumber = desiredCourseNum;
 	 
-	///
+	
 
 }
