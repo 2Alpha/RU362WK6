@@ -38,6 +38,8 @@ private:
 		string StudentIDList[MAX_CAPACITY];
 		
 		static string listOfCourses[]; 
+		int scnRunCounter = 0;
+		int sctRunCounter = 0; 
 
 		//string course::listOfCourses[] = { "CS361", "CS362", "MT415", "E" };
 		
@@ -78,6 +80,7 @@ bool Search4Course(string target, string courseNumList[]);
 void CourseManagementMenu(string mainMenuResponse, crossReference courseData[], course c1, course c2, course c3);
 
 int courseNumFormatCheck(string courseNumEntered); 
+int courseTitleCheck(string title2Check);
 
 int main()
 {
@@ -100,6 +103,11 @@ int main()
 	
 	
 	course course3;
+
+	course3.setCourseNum();
+	course3.setCourseTitle();
+
+
 
 	do
 	{
@@ -167,6 +175,69 @@ void course::printCourseTitle()
 
 }
 
+
+void course::setCourseNum()
+{
+	string desiredCourseNum;
+
+	if (scnRunCounter < 1)
+	{	
+		do
+		{
+			cout << "Initialze object named course3 with a course number: ";
+			cin >> desiredCourseNum;
+			desiredCourseNum = convert2UpperCase(desiredCourseNum);
+		}
+		while (courseNumFormatCheck(desiredCourseNum) > 0);
+
+		courseNumber = desiredCourseNum;
+
+	}
+
+	
+	else
+	{
+		do
+		{
+			cout << endl;
+			cout << "Enter the desired Course Number : " << endl;
+			cout << "Remember format must be XX###: ";
+
+			cin >> desiredCourseNum;
+			desiredCourseNum = convert2UpperCase(desiredCourseNum);
+
+		} while (courseNumFormatCheck(desiredCourseNum) > 0);
+
+		cout << endl;
+		cout << "Success!" << endl;
+		cout << "You modfied course" << courseNumber << " to course # " << desiredCourseNum << endl;
+
+		courseNumber = desiredCourseNum;
+	}
+}
+
+void course::setCourseTitle()
+{
+	string desiredCourseTitle; 
+
+	if (sctRunCounter < 1)
+	{
+		do
+		{
+			cout << "Initialze object named course3 with course a Title: ";
+			cin.clear();
+			getline(cin>>ws, desiredCourseTitle);
+
+		} while (courseTitleCheck(desiredCourseTitle) > 0);
+
+		courseTitle = desiredCourseTitle;
+
+
+	}
+
+
+}
+
 string  course2Manage(course c1, course c2, course c3)
 {
 	int length;
@@ -178,10 +249,11 @@ string  course2Manage(course c1, course c2, course c3)
 	{
 		do
 		{
+			cout << endl;
 			cout << "Choose a course to manage :" << endl;
 			c1.printCourseNumber();  cout << " - "; c1.printCourseTitle(); cout << endl; 
 			c2.printCourseNumber();  cout << " - "; c2.printCourseTitle(); cout << endl;
-			cout << "MT415 - Linear Algebra" << endl;
+			c3.printCourseNumber();  cout << " - "; c3.printCourseTitle(); cout << endl;
 			cout << "Enter the course number(e.g.CS200) or E to exit : ";
 
 			cin >> courseNumEntered;
@@ -455,27 +527,59 @@ int courseNumFormatCheck(string courseNumEntered)
 
 }
 
-void course::setCourseNum()
+
+int courseTitleCheck(string title2Check)
 {
-	string desiredCourseNum;
+	int formatErrorCounter = 0;
+	int titleLength;
 
-	do
+	titleLength = title2Check.length();
+	//cout << "title length = " << titleLength << endl; 
+
+
+	for (int index = 0; index < titleLength; index++)        
 	{
-		cout << endl; 
-		cout << "Enter the desired Course Number : " << endl;
-		cout << "Remember format must be XX###: ";
 
-		cin >> desiredCourseNum;
-		desiredCourseNum = convert2UpperCase(desiredCourseNum);
+		if (index == 0)
+		{
+			if (!(isupper(title2Check[index])))
+			cout << "first Letter is not capital" << endl;
+		}
+		
+		if ((isdigit(title2Check[index])))
+			{
+				formatErrorCounter++;
+				cout << "digit dedected" << endl;
+			}
+		
 
-	} while (courseNumFormatCheck(desiredCourseNum) > 0);
 
-	cout << endl; 
-	cout << "Success!" << endl;
-	cout << "You modfied course" << courseNumber << " to course # " << desiredCourseNum << endl;
-	
-	courseNumber = desiredCourseNum;
-	 
-	
+		if ((title2Check[index] == ' ') && (!(isupper(title2Check[index + 1]))))
+		{
+			formatErrorCounter++;
+			cout << "Next leter not capital" << endl;
+			
+		}
+
+		if ((isupper(title2Check[index])) && (isupper(title2Check[index + 1])))
+		{
+			formatErrorCounter++;
+			cout << "uper case after upper case" << endl;
+
+		}
+
+
+		if (index == (titleLength - 1))
+		{
+			if (!(islower(title2Check[index])))
+			{
+				cout << "Last Letter is not lower" << endl;
+				formatErrorCounter++;
+			}
+		}
+	}
+
+	//cout << "format errors found = " << formatErrorCounter << endl; 
+	return formatErrorCounter;
 
 }
