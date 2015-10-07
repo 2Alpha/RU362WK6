@@ -37,6 +37,7 @@ private:
 		int enrolledStudents;
 		string StudentIDList[MAX_CAPACITY];
 		
+		string listOfCourses[] = { "CS361", "CS362", "MT415", "E" };
 
 public:
 	course();
@@ -440,15 +441,23 @@ void course::setCourseNum()
 {
 	string desiredCourseNum;
 
-		do
-		{
-			cout << "Enter the desired Course NUmber : " << endl; 
-			cout << "Remember format must be XX###" << endl; 
+	do
+	{
+		cout << endl; 
+		cout << "Enter the desired Course Number : " << endl;
+		cout << "Remember format must be XX###: ";
 
-			cin >> desiredCourseNum;
-			desiredCourseNum = convert2UpperCase(desiredCourseNum);
+		cin >> desiredCourseNum;
+		desiredCourseNum = convert2UpperCase(desiredCourseNum);
 
-		} while (courseNumFormatCheck(desiredCourseNum) > 0);
+	} while (courseNumFormatCheck(desiredCourseNum) > 0);
+
+	cout << endl; 
+	cout << "Success!" << endl;
+	cout << "You modfied course" << courseNumber << " to course # " << desiredCourseNum << endl;
+	
+	courseNumber = desiredCourseNum;
+	 
 
 
 }
