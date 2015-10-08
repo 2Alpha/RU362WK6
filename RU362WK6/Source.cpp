@@ -41,23 +41,24 @@ private:
 		int scnRunCounter = 0;
 		int sctRunCounter = 0; 
 
-		//string course::listOfCourses[] = { "CS361", "CS362", "MT415", "E" };
-		
+	
 
 public:
 	course();
 	course(string cNumber, string cTitle, int cCap);
 	
-		void setCourseNum();
+		void setCourseNum(string managementMenuChoice);
 		void setCourseTitle();
+		void initilizeCourseNum();
+		void initializeCourseTitle();
 		void setCapacity();
 
-		void getCourseNum();
+		string getCourseNum();
 		void getCourseTitle();
 		void getCapacity();
 		void getNumEnrolled();
 
-		void printCourse(); 
+		void course::printCourse(string managementMenuChoice, course indentifiedObject);
 		void printCourseNumber();
 		void printCourseTitle();
 		void printStudentIDs(); 
@@ -75,12 +76,14 @@ string convert2UpperCase(string stringInput);
 string course2Manage(course c1, course c2, course c3);
 
 int countArrayEntries(string targetArray[]);
-bool Search4Course(string target, string courseNumList[]);
+bool Search4Course(string target, course c1, course c2, course c3);
 
-void CourseManagementMenu(string mainMenuResponse, crossReference courseData[], course c1, course c2, course c3);
+void CourseManagementMenu(string validCourseNum, course c1, course c2, course c3);
 
 int courseNumFormatCheck(string courseNumEntered); 
 int courseTitleCheck(string title2Check);
+
+course isolateObject(string validCourse, course c1, course c2, course c3);
 
 int main()
 {
@@ -93,30 +96,27 @@ int main()
 	courseProperties [1].ClassNumber = "CS362";
 
 	
-	//string listOfCourses[] = { "CS361", "CS362", "MT415", "E"};
-	string mainMenuResponse;
+
+	string validCourseNum;
 
 	course course1("CS361", "Control Structures", DEFAULT_CAPACITY);
 
-
 	course course2("CS362", "Data Structures", 10);
 	
-	
 	course course3;
-
-	course3.setCourseNum();
-	course3.setCourseTitle();
+	course3.initilizeCourseNum();
+	course3.initializeCourseTitle();
 
 
 
 	do
 	{
-		mainMenuResponse = course2Manage(course1, course2, course3);
+		validCourseNum = course2Manage(course1, course2, course3);
 
-		CourseManagementMenu(mainMenuResponse, courseProperties, course1, course2, course3);
+		CourseManagementMenu(validCourseNum, course1, course2, course3);
 
 
-	} while (mainMenuResponse != "E");
+	} while (validCourseNum != "E");
 
 
 	//CourseManagementMenu();
@@ -156,47 +156,81 @@ course::course(string cNumber, string cTitle, int cCap)
 
 }
 
-void course::printCourse()
+void course::initilizeCourseNum()
 {
+	string desiredCourseNum;
 
-	cout << courseNumber << endl; 
+	do 
+		{
+			cout << "Initialze object named course3 with a course number: ";
+			cin >> desiredCourseNum;
+			desiredCourseNum = convert2UpperCase(desiredCourseNum);
+		} 
+	
+	while (courseNumFormatCheck(desiredCourseNum) > 0);
+
+	courseNumber = desiredCourseNum;
 
 }
+
+void course::initializeCourseTitle()
+{
+	string desiredCourseTitle;
+
+	do
+	{
+		cout << "Initialze object named course3 with course a Title: ";
+		cin.clear();
+		getline(cin >> ws, desiredCourseTitle);
+
+	} while (courseTitleCheck(desiredCourseTitle) > 0);
+
+	courseTitle = desiredCourseTitle;
+
+
+}
+
+
+
+
+string course::getCourseNum()
+
+{
+	return courseNumber;
+
+}
+
+void course::printCourse(string managementMenuChoice, course indentifiedObject)
+{
+	if (managementMenuChoice == "P")
+	{
+		cout << indentifiedObject; 
+
+	}
+
+}
+
 void course::printCourseNumber()
 {
 	cout << courseNumber; 
-
+	
 }
 
 
 void course::printCourseTitle()
-{//
+{
 	cout << courseTitle;
 
 }
 
 
-void course::setCourseNum()
+void course::setCourseNum (string managementMenuChoice)
 {
-	string desiredCourseNum;
 
-	if (scnRunCounter < 1)
+	if (managementMenuChoice == "N")
 	{	
-		do
-		{
-			cout << "Initialze object named course3 with a course number: ";
-			cin >> desiredCourseNum;
-			desiredCourseNum = convert2UpperCase(desiredCourseNum);
-		}
-		while (courseNumFormatCheck(desiredCourseNum) > 0);
+		string desiredCourseNum;
 
-		courseNumber = desiredCourseNum;
-
-	}
-
-	
-	else
-	{
 		do
 		{
 			cout << endl;
@@ -224,7 +258,8 @@ void course::setCourseTitle()
 	{
 		do
 		{
-			cout << "Initialze object named course3 with course a Title: ";
+			cout << endl;
+			cout << "Enter the desired Course Title : " << endl;
 			cin.clear();
 			getline(cin>>ws, desiredCourseTitle);
 
@@ -259,10 +294,11 @@ string  course2Manage(course c1, course c2, course c3)
 			cin >> courseNumEntered;
 			courseNumEntered = convert2UpperCase(courseNumEntered);
 
+
 		} while (courseNumFormatCheck(courseNumEntered) > 0);
 
 
-		//courseExist = Search4Course(courseNumEntered, existingCourses);
+		courseExist = Search4Course(courseNumEntered, c1, c2, c3);
 
 	} while (courseExist != true);
 	
@@ -303,52 +339,42 @@ string convert2UpperCase(string stringInput)
 
 }
 
-bool Search4Course(string target, string courseNumList[])
+bool Search4Course(string target, course c1, course c2, course c3)
 {
+	bool courseFound = false; 
 	
-	int placeFound = 0;
-	int numOfEntries = countArrayEntries(courseNumList);
-	bool courseFound;
+	if (target == c1.getCourseNum())
+	{
+		courseFound = true; 
+	}
 
-		
-		while ((placeFound < numOfEntries) && (courseNumList[placeFound] != target))
-		{
-			placeFound++;		
-			//cout << "looking" << endl;
-		}
+	else if (target == c2.getCourseNum())
+	{
+		courseFound = true;
+	}
 
+	else if (target == c3.getCourseNum())
+	{
+		courseFound = true;
+	}
 
-		if (placeFound < numOfEntries)
-		{
-			courseFound = true;
-			cout << endl;
-			cout << "Success! Input of " << target << " was accepted" << endl << endl;
-		}
+	if (courseFound == false)
+	{
+		cout << endl; 
+		cout << "ERROR! Course " << target << " could not be found." << endl; 
+		cout << "On the brightside, theres always next semester. Try Again." << endl; 
+	}
 
-		else
-		{
-			courseFound = false;
-			cout << endl; 
-			cout << "ERROR! Course number " << target << " was not found." << endl; 
-			cout << "Maybe next semester" << endl << endl;
-		}
+	return courseFound;
 
-		return courseFound;
 }
 
-void CourseManagementMenu(string mainMenuResponse, crossReference courseData[], course c1, course c2, course c3)
+void CourseManagementMenu(string validCourseNum, course c1, course c2, course c3)
 {
-	if (mainMenuResponse != "E")
+	if (validCourseNum != "E")
 	{
-
-		int placeFound = 0;
-		while ((placeFound < 2) && (courseData[placeFound].ClassNumber != mainMenuResponse))
-		{
-			placeFound++;
-			//cout << "looking" << endl;
-		}
-
-
+		course isolatedObject;
+		isolatedObject = isolateObject(validCourseNum, c1, c2, c3);
 
 		string level1Response;
 		bool repeatQuestion;
@@ -377,7 +403,6 @@ void CourseManagementMenu(string mainMenuResponse, crossReference courseData[], 
 				cout << "ERROR! Unrecognized input, please try again." << endl;
 				cout << endl;
 				repeatQuestion = true;
-
 			}
 
 			else
@@ -389,48 +414,14 @@ void CourseManagementMenu(string mainMenuResponse, crossReference courseData[], 
 		// while repeat question equals true
 		while (repeatQuestion == true);
 
+		isolatedObject.printCourse(level1Response, isolatedObject); 
+		isolatedObject.setCourseNum(level1Response); 
 
-		if (level1Response == "P")
-		{
-			
-			if (placeFound == 0)
-			{
-				cout << c1;
-			}
-				
-			if (placeFound == 1)
-			{
-				cout << c2;
-			}
 
-			if (placeFound == 2)
-			{
-				cout << c3;
-			}
 
 		}
 
-		if (level1Response == "N")
-		{
-			
-			if (placeFound == 0)
-			{
-				 c1.setCourseNum();
-			}
-
-			if (placeFound == 1)
-			{
-				c1.setCourseNum();
-			}
-
-			if (placeFound == 2)
-			{
-				c1.setCourseNum();
-			}
-
-		}
-
-	}
+	
 }
 
 int countArrayEntries(string targetArray[])
@@ -459,7 +450,7 @@ ostream& operator<< (ostream& outStream, const course& data)
 	
 		
 	// https://www.youtube.com/watch?v=WtoHf6gPnCs
-	//outStream << 
+	
 
 	return outStream;
 }
@@ -564,7 +555,7 @@ int courseTitleCheck(string title2Check)
 		if ((isupper(title2Check[index])) && (isupper(title2Check[index + 1])))
 		{
 			formatErrorCounter++;
-			cout << "uper case after upper case" << endl;
+			cout << "upper case after upper case" << endl;
 
 		}
 
@@ -581,5 +572,27 @@ int courseTitleCheck(string title2Check)
 
 	//cout << "format errors found = " << formatErrorCounter << endl; 
 	return formatErrorCounter;
+
+}
+
+course isolateObject(string validCourse, course c1, course c2, course c3)
+{
+	
+
+	if (validCourse == c1.getCourseNum())
+	{
+		return c1;
+	}
+
+	else if (validCourse == c2.getCourseNum())
+	{
+		return c2;
+	}
+
+	else if (validCourse == c3.getCourseNum())
+	{
+		return c3;
+	}
+
 
 }
