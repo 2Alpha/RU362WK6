@@ -13,6 +13,7 @@
 #include <cstdio> 
 #include <iomanip>
 #include <string>
+#include <cstddef>
 
 using namespace std;
 
@@ -48,7 +49,7 @@ public:
 	course(string cNumber, string cTitle, int cCap);
 	
 		void setCourseNum(string managementMenuChoice);
-		void setCourseTitle();
+		void setCourseTitle(string managementMenuChoice);
 		void initilizeCourseNum();
 		void initializeCourseTitle();
 		void setCapacity();
@@ -78,12 +79,12 @@ string course2Manage(course c1, course c2, course c3);
 int countArrayEntries(string targetArray[]);
 bool Search4Course(string target, course c1, course c2, course c3);
 
-void CourseManagementMenu(string validCourseNum, course c1, course c2, course c3);
+void CourseManagementMenu(string validCourseNum, course& c1, course& c2, course& c3);
 
-int courseNumFormatCheck(string courseNumEntered); 
+int  courseNumFormatCheck(string courseNumEntered); 
 int courseTitleCheck(string title2Check);
 
-course isolateObject(string validCourse, course c1, course c2, course c3);
+course * isolateObject(string validCourse, course& c1, course& c2, course& c3);
 
 int main()
 {
@@ -244,17 +245,17 @@ void course::setCourseNum (string managementMenuChoice)
 
 		cout << endl;
 		cout << "Success!" << endl;
-		cout << "You modfied course" << courseNumber << " to course # " << desiredCourseNum << endl;
+		cout << "You modfied course " << courseNumber << " to course # " << desiredCourseNum << endl;
 
 		courseNumber = desiredCourseNum;
 	}
 }
 
-void course::setCourseTitle()
+void course::setCourseTitle(string managementMenuChoice)
 {
 	string desiredCourseTitle; 
 
-	if (sctRunCounter < 1)
+	if (managementMenuChoice == "T")
 	{
 		do
 		{
@@ -265,6 +266,11 @@ void course::setCourseTitle()
 
 		} while (courseTitleCheck(desiredCourseTitle) > 0);
 
+
+		cout << endl;
+		cout << "Success!" << endl;
+		cout << "New course Title is " <<  desiredCourseTitle << endl;
+
 		courseTitle = desiredCourseTitle;
 
 
@@ -273,10 +279,9 @@ void course::setCourseTitle()
 
 }
 
-string  course2Manage(course c1, course c2, course c3)
+string course2Manage(course c1, course c2, course c3)
 {
-	int length;
-	int formatErrorCounter;
+
 	string courseNumEntered;
 	bool courseExist = false; 
 	
@@ -295,7 +300,7 @@ string  course2Manage(course c1, course c2, course c3)
 			courseNumEntered = convert2UpperCase(courseNumEntered);
 
 
-		} while (courseNumFormatCheck(courseNumEntered) > 0);
+		} while (courseNumFormatCheck(courseNumEntered) > 0) ;
 
 
 		courseExist = Search4Course(courseNumEntered, c1, c2, c3);
@@ -343,7 +348,12 @@ bool Search4Course(string target, course c1, course c2, course c3)
 {
 	bool courseFound = false; 
 	
-	if (target == c1.getCourseNum())
+	if (target == "E")
+	{
+		courseFound = true;
+	}
+
+	else if (target == c1.getCourseNum())
 	{
 		courseFound = true; 
 	}
@@ -369,13 +379,14 @@ bool Search4Course(string target, course c1, course c2, course c3)
 
 }
 
-void CourseManagementMenu(string validCourseNum, course c1, course c2, course c3)
+void CourseManagementMenu(string validCourseNum, course& c1, course& c2, course& c3)
 {
 	if (validCourseNum != "E")
 	{
-		course isolatedObject;
-		isolatedObject = isolateObject(validCourseNum, c1, c2, c3);
+		
+		//isolatedObject = isolateObject(validCourseNum, c1, c2, c3);
 
+		//cout << "isolate object" << endl << isolatedObject << endl; 
 		string level1Response;
 		bool repeatQuestion;
 
@@ -414,8 +425,12 @@ void CourseManagementMenu(string validCourseNum, course c1, course c2, course c3
 		// while repeat question equals true
 		while (repeatQuestion == true);
 
-		isolatedObject.printCourse(level1Response, isolatedObject); 
-		isolatedObject.setCourseNum(level1Response); 
+		//course* isolatedObject = NULL;
+		//isolatedObject = &isolateObject(validCourseNum, c1, c2, c3);
+
+		//isolatedObject->printCourse(level1Response, c1);
+		isolateObject(validCourseNum, c1, c2, c3)->setCourseNum(level1Response);
+		isolateObject(validCourseNum, c1, c2, c3)->setCourseTitle(level1Response);
 
 
 
@@ -455,16 +470,22 @@ ostream& operator<< (ostream& outStream, const course& data)
 	return outStream;
 }
 
-int courseNumFormatCheck(string courseNumEntered)
+int  courseNumFormatCheck(string courseNumEntered)
 {
 	int length;
 	int formatErrorCounter = 0;
 	string correctlyFormatedCourse; 
+	bool loopQuestion = true; 
 
 
 		length = courseNumEntered.length();
 
-		if (length < 5)
+		if (courseNumEntered == "E")
+		{
+			formatErrorCounter = 0;
+		}
+
+		else if (length < 5)
 		{
 			cout << endl;
 			cout << "ERROR! The course number you entered  " << courseNumEntered << " is too short." << endl;
@@ -514,7 +535,8 @@ int courseNumFormatCheck(string courseNumEntered)
 		}
 
 
-	return formatErrorCounter;
+
+		return formatErrorCounter;
 
 }
 
@@ -575,24 +597,29 @@ int courseTitleCheck(string title2Check)
 
 }
 
-course isolateObject(string validCourse, course c1, course c2, course c3)
+course * isolateObject(string validCourse, course& c1, course& c2, course& c3)
 {
 	
+	course *tempClass = NULL;
 
 	if (validCourse == c1.getCourseNum())
 	{
-		return c1;
+		
+		return &c1;
 	}
 
 	else if (validCourse == c2.getCourseNum())
 	{
-		return c2;
+		return &c2;
 	}
 
 	else if (validCourse == c3.getCourseNum())
 	{
-		return c3;
+		return &c3;
 	}
 
+	else 
+		
+	return tempClass;
 
 }
