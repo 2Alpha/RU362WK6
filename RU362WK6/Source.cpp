@@ -20,7 +20,7 @@ using namespace std;
 const int MIN_CAPACITY = 1;
 const int MAX_CAPACITY = 30;
 const int DEFAULT_CAPACITY = 30;
-const int IGNORE_AMOUNT = 100;
+const int IGNORE_AMOUNT = 1000;
 
 struct crossReference
 {
@@ -47,26 +47,30 @@ private:
 public:
 	course();
 	course(string cNumber, string cTitle, int cCap);
-	
+	course operator++();
+
 		void setCourseNum(string managementMenuChoice);
 		void setCourseTitle(string managementMenuChoice);
 		void initilizeCourseNum();
 		void initializeCourseTitle();
-		void setCapacity();
+		void setCapacity(string managementMenuChoice);
+		void studentManagement(string managementMenuChoice);
 
 		string getCourseNum();
 		void getCourseTitle();
 		void getCapacity();
-		void getNumEnrolled();
+		int getNumEnrolled();
 
 		void course::printCourse(string managementMenuChoice, course indentifiedObject);
 		void printCourseNumber();
 		void printCourseTitle();
-		void printStudentIDs(); 
+		void printStudentIDs(string MenuChoice); 
 
-		void addOneStudent(); 
-		void dropOneStudent(); 
-
+		void addOneStudent(string MenuChoice);
+		void dropOneStudent(string MenuChoice);
+		void incrementCourseCap();
+		
+		
 		friend ostream& operator<< (ostream& outStream, const course& data);
 
 };
@@ -83,6 +87,7 @@ void CourseManagementMenu(string validCourseNum, course& c1, course& c2, course&
 
 int  courseNumFormatCheck(string courseNumEntered); 
 int courseTitleCheck(string title2Check);
+int errorCheckStuID(string incomingID);
 
 course * isolateObject(string validCourse, course& c1, course& c2, course& c3);
 
@@ -279,6 +284,264 @@ void course::setCourseTitle(string managementMenuChoice)
 
 }
 
+void course::setCapacity(string managementMenuChoice)
+{
+	if (managementMenuChoice == "C")
+	{
+		int errorCounter;
+		int desiredCapacity;
+		int currentlyEnrolled = getNumEnrolled();
+
+		do
+		{
+			errorCounter = 0;
+			cout << endl; 
+			cout << "The current course capacity is " << capacity << endl;
+			cout << "The current number of enrolled students is " << currentlyEnrolled << endl;
+			cout << "Enter the desired course capcity: ";
+			cin >> desiredCapacity;
+	
+			
+			if (cin.fail())
+			{
+				cin.clear();
+				cin.ignore(IGNORE_AMOUNT, '\n');
+				cout << "ERROR!" << endl; 
+				cout << "Only values of type integer are welcome to this party" << endl;
+				cout << "Please Try Agin." << endl; 
+				errorCounter++;
+			}
+
+			else if ((cin.fail()) || (desiredCapacity < currentlyEnrolled))
+			{
+				cin.clear();
+				cin.ignore(IGNORE_AMOUNT, '\n');
+				errorCounter++;
+				cout << "Error! cannot change capacity to " << desiredCapacity << " unless " << currentlyEnrolled - desiredCapacity << endl;
+				cout << "are dropped, because " << currentlyEnrolled << " students are alreday registered" << endl;
+				cout << " Try Again." << endl; 
+
+			}
+
+			else if ((cin.fail()) || (desiredCapacity < MIN_CAPACITY) || (desiredCapacity > MAX_CAPACITY))
+			{
+				cin.clear();
+				cin.ignore(IGNORE_AMOUNT, '\n');
+				errorCounter++;
+				cout << "Error! cannot change capacity to " << desiredCapacity << endl;
+				//cout << "Desired course capacity must be greater than " << MIN_CAPACITY << "greater than " << currentlyEnrolled << endl; 
+				//cout << "Greater than "
+				cout << "Try Again." << endl;
+
+			}
+
+		} while (errorCounter > 0);
+
+		cout << "Success! Course capacity is now " << desiredCapacity; 
+		capacity = desiredCapacity;
+	}
+
+}
+
+void course::studentManagement(string managementMenuChoice)
+{
+	if (managementMenuChoice == "S")
+	{
+		string menuChoice;
+		int errorCounter = 0;
+
+		do
+		{
+			cout << endl;
+			cout << "Student Management Menu" << endl;
+			cout << "P - Print Student IDs" << endl;
+			cout << "A - Add One Student" << endl;
+			cout << "D - Drop One Student" << endl;
+			cout << "B - Back to course Management Menu" << endl;
+			cout << "Enter choice here : ";
+
+			cin >> menuChoice;
+			menuChoice = convert2UpperCase(menuChoice);
+
+			if ((menuChoice != "P") && (menuChoice != "A") && (menuChoice != "D") &&
+				(menuChoice != "B"))
+			{
+				cout << endl;
+				cout << "ERROR! Unrecognized input, please try again." << endl;
+				cout << endl;
+				errorCounter++;
+			}
+
+		} while (errorCounter > 0);
+
+		printStudentIDs(menuChoice); 
+		addOneStudent(menuChoice);
+		dropOneStudent(menuChoice);
+
+
+	}
+}
+
+int course::getNumEnrolled()
+{
+	return enrolledStudents;
+}
+
+
+course course::operator++()
+{
+	
+
+		if (capacity < MAX_CAPACITY)
+		{
+			capacity++;
+			cout << "Capacity is now " << capacity << endl;
+		}
+
+		else
+		{
+			cout << "Course is already set to Max capacity" << endl;
+		}
+
+		return *this;
+	
+}
+
+void course::printStudentIDs(string MenuChoice)
+{
+	
+	if (MenuChoice == "P")
+	{
+		//int numOfStudentIds = countArrayEntries(StudentIDList);
+		int numOfStudentIds = enrolledStudents;
+
+		if (numOfStudentIds == 0)
+		{
+			cout << endl;
+			cout << "The course does not have any student enrolled." << endl;
+			cout << "Therefore there are no student Id's to display" << endl;
+		}
+
+		else
+		{
+			cout << endl;
+			cout << numOfStudentIds << " Student(s) enrolled in " << courseNumber << endl;
+			for (int index = 0; index < numOfStudentIds; index++)
+			{
+				cout << StudentIDList[index] << endl;
+			}
+		}
+	}
+}
+
+void course::addOneStudent(string MenuChoice)
+{
+
+	if (MenuChoice == "A")
+	{
+		string newStudentId;
+
+		if (enrolledStudents < capacity)
+		{
+			do
+			{
+
+				cout << endl; 
+				cout << "Student ID's must be 5 digits, no leading Zero's" << endl;
+				cout << "Enter student ID: ";
+				cin >> newStudentId;
+
+			} while (errorCheckStuID(newStudentId) > 0); 
+
+
+
+			StudentIDList[enrolledStudents] = newStudentId;
+			enrolledStudents++;
+
+			cout << endl; 
+			cout << "Added student id " << newStudentId;
+			cout << endl; 
+		}
+		
+		else
+		{
+			cout << endl; 
+			cout << "ERROR! Course is full.  Cannot add any more students." << endl; 
+		}
+
+
+
+	}
+
+}
+
+void course::dropOneStudent(string MenuChoice)
+{
+	if (MenuChoice == "D")
+	{
+		if (enrolledStudents > 0)
+		{
+			string target;
+			//int numOfStudentIds = countArrayEntries(StudentIDList);
+			int numOfStudentIds = enrolledStudents;
+			cout << "Choose student ID to delete from "<< courseNumber << endl;
+			for (int index = 0; index < numOfStudentIds; index++)
+			{
+				cout << StudentIDList[index] << endl;
+			}
+
+			do
+			{
+				cout << "Enter student ID to delete here : ";
+				cin >> target;
+
+			} while (errorCheckStuID(target) > 0);
+
+			int placeFound = 0;
+
+			while ((placeFound < (enrolledStudents) && (StudentIDList[placeFound] != target)))
+				placeFound++;                        // increment index
+
+
+			//If itemToDel was Found, delete it
+			if (placeFound < enrolledStudents) 
+			{
+
+				// Move all values below itemToDel UP one cell
+				for (int num = placeFound + 1; num < enrolledStudents; num++)
+				{
+					StudentIDList[num - 1] = StudentIDList[num];
+				}
+
+
+				// Decrement list size
+				enrolledStudents--;
+
+				cout << endl << "Success!" << endl;
+				cout << "Rental entry with phone # \"" << target << "\" has been deleted.";
+				cout << endl;
+
+			}  // end if
+
+			else
+			{
+				cout << endl << "ERROR!" << endl;
+				cout << "Student ID " << target << " cound not be found." << endl;
+				cout << "Try Agian." << endl; 
+			}
+
+		}
+
+
+		else
+		{
+			cout << "Cannot drop a student -- no students are enrolled." << endl; 
+		}
+
+	}
+}
+
+
 string course2Manage(course c1, course c2, course c3)
 {
 
@@ -393,12 +656,14 @@ void CourseManagementMenu(string validCourseNum, course& c1, course& c2, course&
 		do
 		{
 
+			cout << endl; 
 			cout << "P - Print course data" << endl;
 			cout << "N - Modify course Number" << endl;
 			cout << "T - Modify course Title" << endl;
 			cout << "C - Modify course Capacity" << endl;
 			cout << "I - Increment course Capacity" << endl;
 			cout << "S - Student Management" << endl;
+			cout << "B - Back to Choose Course menu" << endl;
 			cout << "Enter response here: ";
 
 			cin >> level1Response;
@@ -408,7 +673,8 @@ void CourseManagementMenu(string validCourseNum, course& c1, course& c2, course&
 
 
 			if ((level1Response != "P") && (level1Response != "N") && (level1Response != "T") &&
-				(level1Response != "C") && (level1Response != "I") && (level1Response != "S"))
+				(level1Response != "C") && (level1Response != "I") && (level1Response != "S") && 
+				(level1Response != "B"))
 			{
 				cout << endl;
 				cout << "ERROR! Unrecognized input, please try again." << endl;
@@ -425,16 +691,26 @@ void CourseManagementMenu(string validCourseNum, course& c1, course& c2, course&
 		// while repeat question equals true
 		while (repeatQuestion == true);
 
-		//course* isolatedObject = NULL;
-		//isolatedObject = &isolateObject(validCourseNum, c1, c2, c3);
 
-		//isolatedObject->printCourse(level1Response, c1);
 		isolateObject(validCourseNum, c1, c2, c3)->setCourseNum(level1Response);
 		isolateObject(validCourseNum, c1, c2, c3)->setCourseTitle(level1Response);
-
-
-
+		isolateObject(validCourseNum, c1, c2, c3)->setCapacity(level1Response);
+		isolateObject(validCourseNum, c1, c2, c3)->studentManagement(level1Response);
+		
+		if (level1Response == "P")
+		{
+			cout << *isolateObject(validCourseNum, c1, c2, c3);
 		}
+
+
+		if (level1Response == "I")
+		{
+			isolateObject(validCourseNum, c1, c2, c3)->operator++();
+		}
+
+
+
+	}
 
 	
 }
@@ -621,5 +897,52 @@ course * isolateObject(string validCourse, course& c1, course& c2, course& c3)
 	else 
 		
 	return tempClass;
+
+}
+int errorCheckStuID(string incomingID)
+{
+	int length; 
+	int formatErrorCounter = 0;
+
+	length = incomingID.length();
+
+	if (length < 5)
+	{
+		cout << endl;
+		cout << "ERROR! The Student ID you entered  " << incomingID << " is too short." << endl;
+		cout << "System Expected 5 characters." << endl << endl;
+		formatErrorCounter++;
+	}
+
+	else if (length > 5)
+	{
+		cout << endl;
+		cout << "ERROR! The Student ID you entered  " << incomingID << " is too long. " << endl;
+		cout << "System Expected 5 characters." << endl << endl;
+		formatErrorCounter++;
+	}
+
+	else if (length == 5)
+	{
+		for (int index = 0; index < 5; index++)         // Used Loops for error checking 
+		{
+			if (!(isdigit(incomingID[index])))
+			{
+				formatErrorCounter++;
+				//cout << "studID not a # " << endl;
+			}
+
+			if ((index == 0) && (incomingID[index] == '0'))
+			{
+				formatErrorCounter++;
+				//cout << "Leading Zero found" << endl;
+			}
+
+		}
+
+	}
+
+	//cout << "errors found " << formatErrorCounter << endl; 
+	return formatErrorCounter; 
 
 }
