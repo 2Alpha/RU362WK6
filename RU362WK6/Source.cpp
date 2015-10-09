@@ -1,11 +1,40 @@
 //***************************************************************************
 //  FILENAME:	 AllenAssn5.cpp
-//  DESCRIPTION: m
+//  DESCRIPTION: Course Managemmt Program
 //
 //  DATE:        10/1/15
 //  CLASS/TERM:  CS362_X40_Data Structures - CU_CS362 - XIN_X40_15F8W1
 //  DESIGNER:	 Andrae Allen
 //  FUNCTIONS:	 main - reads values, performs calculations, & displays results
+//				 course::course - constructor 
+//				 course::operator++ - increments course capacity by 1 
+//				 course::setCourseNum - Sets course number
+//				 course::setCourseTitle - Sets Course Title
+//				 course::initilizeCourseNum - Initiaize course Number on first run
+//				 course::initializeCourseTitle - Initialize course title on first run
+//				 course::LsetCapacity - sets capacity for course
+//				 course::studentManagement - student Management Menu 
+//				 course::getCourseNum - gets course number
+//				 course::getCourseTitle - gets course title
+//				 course::getCapacity - gets course capacity
+//				 course::getNumEnrolled - gets number of enrolled students 
+//				 course::printCourse - prints course informatiomn 
+//				 course::printCourseNumber -prints course number 
+//				 course::printCourseTitle - prints course title 
+//				 course::printStudentIDs - prints student ID's
+//				 course::addOneStudent - adds student to course 
+//				 course::dropOneStudent - removes student from course 
+//				 course::incrementCourseCap increase course capacity by 1 
+//				 friend ostream& operator<< - overloaded output operator
+//				 convert2UpperCase - converts string to uppercase
+//				 course2Manage - shows course to manage menu
+//				 countArrayEntries - counts array entries 
+//				 Search4Course - searches for course
+//				 CourseManagementMenu - shows course management menu 
+//				 courseNumFormatCheck - checks course number format
+//				 courseTitleCheck - checks course title format
+//				 errorCheckStuID - error check student id
+//               isolateObject  - identifies oject course resides in
 //***************************************************************************
 
 #include <iostream> 
@@ -17,33 +46,24 @@
 
 using namespace std;
 
-const int MIN_CAPACITY = 1;
-const int MAX_CAPACITY = 30;
-const int DEFAULT_CAPACITY = 30;
-const int IGNORE_AMOUNT = 1000;
+const int MIN_CAPACITY = 1;				// Minimum course capacity
+const int MAX_CAPACITY = 30;			// Max course capacity
+const int DEFAULT_CAPACITY = 30;		// Default capacity
+const int IGNORE_AMOUNT = 1000;			// Ignore amount
+const int STUDENT_ID_LENTH = 5;			// student ID Length 
+const int COURSE_CHAR_LENGTH = 5;		// Character length for course
+const int END_OF_ALPHA_POSITION = 2;	// End of alpha position for course numbers
 
-struct crossReference
-{
-	string objectName;
-	string ClassNumber;
-
-};
 
 class course
 {
 private:
-		string courseNumber; 
-		string courseTitle; 
-		int capacity; 
-		int enrolledStudents;
-		string StudentIDList[MAX_CAPACITY];
+		string courseNumber;					// course number 
+		string courseTitle;						// course title 
+		int capacity;							// course capacity
+		int enrolledStudents;					// enrolled students 
+		string StudentIDList[MAX_CAPACITY];		// array of student IDs 
 		
-		static string listOfCourses[]; 
-		int scnRunCounter = 0;
-		int sctRunCounter = 0; 
-
-	
-
 public:
 	course();
 	course(string cNumber, string cTitle, int cCap);
@@ -75,7 +95,6 @@ public:
 
 };
 
-string course::listOfCourses[] = { "CS361", "CS362", "MT415", "E" };
 
 string convert2UpperCase(string stringInput);
 string course2Manage(course c1, course c2, course c3);
@@ -91,19 +110,17 @@ int errorCheckStuID(string incomingID);
 
 course * isolateObject(string validCourse, course& c1, course& c2, course& c3);
 
+//**************************************************************************
+//  FUNCTION:       main
+//  DESCRIPTION:    Creates three course class objects and manipulates them.
+//  OUTPUT:	
+//  Return Value:	0 for success
+//  CALLS TO:	    course2Manage, CourseManagementMenu, 
+//**************************************************************************
 int main()
 {
-	crossReference courseProperties[3];
-
-	courseProperties [0].objectName = "course1";
-	courseProperties [0].ClassNumber = "CS361";
-
-	courseProperties [1].objectName = "course2";
-	courseProperties [1].ClassNumber = "CS362";
-
 	
-
-	string validCourseNum;
+	string validCourseNum;												// valid course number
 
 	course course1("CS361", "Control Structures", DEFAULT_CAPACITY);
 
@@ -112,8 +129,6 @@ int main()
 	course course3;
 	course3.initilizeCourseNum();
 	course3.initializeCourseTitle();
-
-
 
 	do
 	{
@@ -125,21 +140,19 @@ int main()
 	} while (validCourseNum != "E");
 
 
-	//CourseManagementMenu();
-
-	// cout << course2; // over load ready 
-
-	//course3.printCourse();
-
-	//cout << "# " << countArrayEntries(listOfCourses) << endl; ;
-
 	system("PAUSE");
 	return 0;
 
 }
 
 
-
+//**************************************************************************
+//  FUNCTION:       course::course
+//  DESCRIPTION:    Constructor without parameters
+//  OUTPUT:	
+//  Return Value:	none
+//  CALLS TO:	    none, 
+//**************************************************************************
 course::course()
 {
 	courseNumber = "";
@@ -150,6 +163,13 @@ course::course()
 	
 }
 
+//**************************************************************************
+//  FUNCTION:       course::course
+//  DESCRIPTION:    Constructor with parameters
+//  OUTPUT:	
+//  Return Value:	none
+//  CALLS TO:	    none 
+//**************************************************************************
 course::course(string cNumber, string cTitle, int cCap)
 {
 	courseNumber = cNumber;
@@ -162,6 +182,12 @@ course::course(string cNumber, string cTitle, int cCap)
 
 }
 
+//**************************************************************************
+//  FUNCTION:       course::initilizeCourseNum
+//  DESCRIPTION:    Initiaize course Number on first run
+//  INPUT			Parameters- none
+//  OUTPUT:			none
+//**************************************************************************
 void course::initilizeCourseNum()
 {
 	string desiredCourseNum;
@@ -179,6 +205,12 @@ void course::initilizeCourseNum()
 
 }
 
+//**************************************************************************
+//  FUNCTION:       course::initilizeCourseTitle
+//  DESCRIPTION:    Initiaize course Title on first run
+//  INPUT			Parameters- none
+//  OUTPUT:			none
+//**************************************************************************
 void course::initializeCourseTitle()
 {
 	string desiredCourseTitle;
@@ -197,8 +229,12 @@ void course::initializeCourseTitle()
 }
 
 
-
-
+//**************************************************************************
+//  FUNCTION:       course::getCourseNum
+//  DESCRIPTION:    gets course number
+//  INPUT			Parameters- none
+//  OUTPUT:			courseNumber
+//**************************************************************************
 string course::getCourseNum()
 
 {
@@ -206,6 +242,12 @@ string course::getCourseNum()
 
 }
 
+//**************************************************************************
+//  FUNCTION:       course::printCourse
+//  DESCRIPTION:    prints out object info
+//  INPUT			Parameters - managementMenuChoice, indentifiedObject
+//  OUTPUT:			none
+//**************************************************************************
 void course::printCourse(string managementMenuChoice, course indentifiedObject)
 {
 	if (managementMenuChoice == "P")
@@ -216,20 +258,36 @@ void course::printCourse(string managementMenuChoice, course indentifiedObject)
 
 }
 
+//**************************************************************************
+//  FUNCTION:       course::printCourseNumber
+//  DESCRIPTION:    prints course number
+//  INPUT			none
+//  OUTPUT:			none
+//**************************************************************************
 void course::printCourseNumber()
 {
 	cout << courseNumber; 
 	
 }
 
-
+//**************************************************************************
+//  FUNCTION:       course::printCourseTitle
+//  DESCRIPTION:    prints course title
+//  INPUT			none
+//  OUTPUT:			none
+//**************************************************************************
 void course::printCourseTitle()
 {
 	cout << courseTitle;
 
 }
 
-
+//**************************************************************************
+//  FUNCTION:       course::setCourseNum
+//  DESCRIPTION:    prints course title
+//  INPUT			Parameters - managementMenuChoice
+//  OUTPUT:			none
+//**************************************************************************
 void course::setCourseNum (string managementMenuChoice)
 {
 
@@ -256,6 +314,12 @@ void course::setCourseNum (string managementMenuChoice)
 	}
 }
 
+//**************************************************************************
+//  FUNCTION:       course::setCourseTitle
+//  DESCRIPTION:    sets course title
+//  INPUT			Parameters - managementMenuChoice
+//  OUTPUT:			none
+//**************************************************************************
 void course::setCourseTitle(string managementMenuChoice)
 {
 	string desiredCourseTitle; 
@@ -284,6 +348,12 @@ void course::setCourseTitle(string managementMenuChoice)
 
 }
 
+//**************************************************************************
+//  FUNCTION:       course::setCapacity
+//  DESCRIPTION:    sets course capacity
+//  INPUT			Parameters - managementMenuChoice
+//  OUTPUT:			none
+//**************************************************************************
 void course::setCapacity(string managementMenuChoice)
 {
 	if (managementMenuChoice == "C")
@@ -329,8 +399,6 @@ void course::setCapacity(string managementMenuChoice)
 				cin.ignore(IGNORE_AMOUNT, '\n');
 				errorCounter++;
 				cout << "Error! cannot change capacity to " << desiredCapacity << endl;
-				//cout << "Desired course capacity must be greater than " << MIN_CAPACITY << "greater than " << currentlyEnrolled << endl; 
-				//cout << "Greater than "
 				cout << "Try Again." << endl;
 
 			}
@@ -343,6 +411,12 @@ void course::setCapacity(string managementMenuChoice)
 
 }
 
+//**************************************************************************
+//  FUNCTION:       course::studentManagement
+//  DESCRIPTION:    shows student Management Menu
+//  INPUT			Parameters - managementMenuChoice
+//  OUTPUT:			none
+//**************************************************************************
 void course::studentManagement(string managementMenuChoice)
 {
 	if (managementMenuChoice == "S")
@@ -382,12 +456,23 @@ void course::studentManagement(string managementMenuChoice)
 	}
 }
 
+//**************************************************************************
+//  FUNCTION:       course::getNumEnrolled
+//  DESCRIPTION:    gets number of enrolled students 
+//  INPUT			Parameters - none
+//  OUTPUT:			enrolledStudents
+//**************************************************************************
 int course::getNumEnrolled()
 {
 	return enrolledStudents;
 }
 
-
+//**************************************************************************
+//  FUNCTION:       course::operator++
+//  DESCRIPTION:    increments course capacity by 1
+//  INPUT			Parameters - none
+//  OUTPUT:			itself
+//**************************************************************************
 course course::operator++()
 {
 	
@@ -407,12 +492,17 @@ course course::operator++()
 	
 }
 
+//**************************************************************************
+//  FUNCTION:       course::printStudentIDs
+//  DESCRIPTION:    prints student ID's
+//  INPUT			Parameters - MenuChoice
+//  OUTPUT:			none
+//**************************************************************************
 void course::printStudentIDs(string MenuChoice)
 {
 	
 	if (MenuChoice == "P")
 	{
-		//int numOfStudentIds = countArrayEntries(StudentIDList);
 		int numOfStudentIds = enrolledStudents;
 
 		if (numOfStudentIds == 0)
@@ -434,6 +524,12 @@ void course::printStudentIDs(string MenuChoice)
 	}
 }
 
+//**************************************************************************
+//  FUNCTION:       course::addOneStudent
+//  DESCRIPTION:    adds one student to course
+//  INPUT			Parameters - MenuChoice
+//  OUTPUT:			none
+//**************************************************************************
 void course::addOneStudent(string MenuChoice)
 {
 
@@ -475,6 +571,12 @@ void course::addOneStudent(string MenuChoice)
 
 }
 
+//**************************************************************************
+//  FUNCTION:       course::dropOneStudent(
+//  DESCRIPTION:    removes one student from course
+//  INPUT			Parameters - MenuChoice
+//  OUTPUT:			none
+//**************************************************************************
 void course::dropOneStudent(string MenuChoice)
 {
 	if (MenuChoice == "D")
@@ -482,7 +584,7 @@ void course::dropOneStudent(string MenuChoice)
 		if (enrolledStudents > 0)
 		{
 			string target;
-			//int numOfStudentIds = countArrayEntries(StudentIDList);
+
 			int numOfStudentIds = enrolledStudents;
 			cout << "Choose student ID to delete from "<< courseNumber << endl;
 			for (int index = 0; index < numOfStudentIds; index++)
@@ -541,7 +643,12 @@ void course::dropOneStudent(string MenuChoice)
 	}
 }
 
-
+//**************************************************************************
+//  FUNCTION:       course2Manage
+//  DESCRIPTION:    displays course options
+//  INPUT			Parameters - c1, c2, c3
+//  OUTPUT:			courseNumEntered
+//**************************************************************************
 string course2Manage(course c1, course c2, course c3)
 {
 
@@ -577,6 +684,12 @@ string course2Manage(course c1, course c2, course c3)
 
 }
 
+//**************************************************************************
+//  FUNCTION:       convert2UpperCase
+//  DESCRIPTION:    converts  string to upper case
+//  INPUT			Parameters - c1, c2, c3
+//  OUTPUT:			upperCasedString
+//**************************************************************************
 string convert2UpperCase(string stringInput)
 {
 	int i = 0;
@@ -607,7 +720,13 @@ string convert2UpperCase(string stringInput)
 
 }
 
-bool Search4Course(string target, course c1, course c2, course c3)
+//**************************************************************************
+//  FUNCTION:       Search4Course
+//  DESCRIPTION:    searches for course withiin ojects
+//  INPUT			Parameters - c1, c2, c3
+//  OUTPUT:			bool courseFound 
+//**************************************************************************
+bool Search4Course (string target, course c1, course c2, course c3)
 {
 	bool courseFound = false; 
 	
@@ -642,14 +761,17 @@ bool Search4Course(string target, course c1, course c2, course c3)
 
 }
 
+//**************************************************************************
+//  FUNCTION:       CourseManagementMenu
+//  DESCRIPTION:    Display course Managment Menu
+//  INPUT			Parameters - validCourseNumm, c1, c2, c3
+//  OUTPUT:			none 
+//**************************************************************************
 void CourseManagementMenu(string validCourseNum, course& c1, course& c2, course& c3)
 {
 	if (validCourseNum != "E")
 	{
 		
-		//isolatedObject = isolateObject(validCourseNum, c1, c2, c3);
-
-		//cout << "isolate object" << endl << isolatedObject << endl; 
 		string level1Response;
 		bool repeatQuestion;
 
@@ -715,13 +837,19 @@ void CourseManagementMenu(string validCourseNum, course& c1, course& c2, course&
 	
 }
 
+//**************************************************************************
+//  FUNCTION:       countArrayEntries
+//  DESCRIPTION:    count array entries
+//  INPUT			Parameters - taragetArray 
+//  OUTPUT:			count - num of array entries 
+//**************************************************************************
 int countArrayEntries(string targetArray[])
 {
 
 	int count = 0;
 
 	for (int index = 0; targetArray[index] != ""; index++)
-		if (targetArray[index].length() == 5)
+		if (targetArray[index].length() == STUDENT_ID_LENTH)
 		{
 			
 			count++;
@@ -732,6 +860,12 @@ int countArrayEntries(string targetArray[])
 	return count; 
 }
 
+//**************************************************************************
+//  FUNCTION:       operator<<
+//  DESCRIPTION:    overloaded output operator
+//  INPUT			Parameters - outstream, data
+//  OUTPUT:			outStream
+//**************************************************************************
 ostream& operator<< (ostream& outStream, const course& data)
 {
 	cout << endl; 
@@ -739,13 +873,15 @@ ostream& operator<< (ostream& outStream, const course& data)
 	outStream << data.enrolledStudents << " Seats taken, out of " << data.capacity << " total seats." << endl; 
 	cout << endl; 
 	
-		
-	// https://www.youtube.com/watch?v=WtoHf6gPnCs
-	
-
 	return outStream;
 }
 
+//**************************************************************************
+//  FUNCTION:       courseNumFormatCheck
+//  DESCRIPTION:    checks course number format
+//  INPUT			Parameters - courseNumEntered
+//  OUTPUT:			formatErrorCounter - number of errors detected
+//**************************************************************************
 int  courseNumFormatCheck(string courseNumEntered)
 {
 	int length;
@@ -761,7 +897,7 @@ int  courseNumFormatCheck(string courseNumEntered)
 			formatErrorCounter = 0;
 		}
 
-		else if (length < 5)
+		else if (length < COURSE_CHAR_LENGTH)
 		{
 			cout << endl;
 			cout << "ERROR! The course number you entered  " << courseNumEntered << " is too short." << endl;
@@ -770,7 +906,7 @@ int  courseNumFormatCheck(string courseNumEntered)
 
 		}
 
-		else if (length > 5)
+		else if (length > COURSE_CHAR_LENGTH)
 		{
 			cout << endl;
 			cout << "ERROR! The course number you entered  " << courseNumEntered << " is too long. " << endl;
@@ -778,9 +914,9 @@ int  courseNumFormatCheck(string courseNumEntered)
 			formatErrorCounter++;
 		}
 
-		else if (length == 5)
+		else if (length == COURSE_CHAR_LENGTH)
 		{
-			for (int index = 0; index < 2; index++)         // Used Loops for error checking 
+			for (int index = 0; index < END_OF_ALPHA_POSITION; index++)         // Used Loops for error checking 
 			{
 				if (!(isalpha(courseNumEntered[index])))
 				{
@@ -789,7 +925,7 @@ int  courseNumFormatCheck(string courseNumEntered)
 				}
 			}
 
-			for (int index = 2; index < 5; index++)         // Used Loops for error checking 
+			for (int index = 2; index < COURSE_CHAR_LENGTH; index++)         // Used Loops for error checking 
 			{
 				if (!(isdigit(courseNumEntered[index])))
 				{
@@ -801,7 +937,7 @@ int  courseNumFormatCheck(string courseNumEntered)
 		}
 
 
-		if ((length == 5) && (formatErrorCounter > 0))
+		if ((length == COURSE_CHAR_LENGTH) && (formatErrorCounter > 0))
 		{
 			{
 				cout << endl;
@@ -816,7 +952,12 @@ int  courseNumFormatCheck(string courseNumEntered)
 
 }
 
-
+//**************************************************************************
+//  FUNCTION:       courseTitleCheck
+//  DESCRIPTION:    checks course Title Format
+//  INPUT			Parameters - title2Check 
+//  OUTPUT:			formatErrorCounter - number of errors detected
+//**************************************************************************
 int courseTitleCheck(string title2Check)
 {
 	int formatErrorCounter = 0;
@@ -873,6 +1014,12 @@ int courseTitleCheck(string title2Check)
 
 }
 
+//**************************************************************************
+//  FUNCTION:       isolateObject
+//  DESCRIPTION:    identifies oject course resides in
+//  INPUT			Parameters -  validCourse, c1, c2, c3
+//  OUTPUT:			course 
+//**************************************************************************
 course * isolateObject(string validCourse, course& c1, course& c2, course& c3)
 {
 	
@@ -899,6 +1046,13 @@ course * isolateObject(string validCourse, course& c1, course& c2, course& c3)
 	return tempClass;
 
 }
+
+//**************************************************************************
+//  FUNCTION:       errorCheckStuID
+//  DESCRIPTION:    error checks student ID
+//  INPUT			Parameters - incomingID - ID to examine
+//  OUTPUT:			formatErrorCounter - number of errors detected
+//**************************************************************************
 int errorCheckStuID(string incomingID)
 {
 	int length; 
@@ -906,7 +1060,7 @@ int errorCheckStuID(string incomingID)
 
 	length = incomingID.length();
 
-	if (length < 5)
+	if (length < STUDENT_ID_LENTH)
 	{
 		cout << endl;
 		cout << "ERROR! The Student ID you entered  " << incomingID << " is too short." << endl;
@@ -914,7 +1068,7 @@ int errorCheckStuID(string incomingID)
 		formatErrorCounter++;
 	}
 
-	else if (length > 5)
+	else if (length > STUDENT_ID_LENTH)
 	{
 		cout << endl;
 		cout << "ERROR! The Student ID you entered  " << incomingID << " is too long. " << endl;
@@ -922,9 +1076,9 @@ int errorCheckStuID(string incomingID)
 		formatErrorCounter++;
 	}
 
-	else if (length == 5)
+	else if (length == STUDENT_ID_LENTH)
 	{
-		for (int index = 0; index < 5; index++)         // Used Loops for error checking 
+		for (int index = 0; index < STUDENT_ID_LENTH; index++)         // Used Loops for error checking 
 		{
 			if (!(isdigit(incomingID[index])))
 			{
