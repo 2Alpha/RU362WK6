@@ -88,8 +88,6 @@ public:
 
 		void addOneStudent(string MenuChoice);
 		void dropOneStudent(string MenuChoice);
-		void incrementCourseCap();
-		
 		
 		friend ostream& operator<< (ostream& outStream, const course& data);
 
@@ -649,6 +647,7 @@ void course::dropOneStudent(string MenuChoice)
 //  INPUT			Parameters - c1, c2, c3
 //  OUTPUT:			courseNumEntered
 //**************************************************************************
+
 string course2Manage(course c1, course c2, course c3)
 {
 
